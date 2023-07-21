@@ -37,10 +37,10 @@ namespace JmalHnd_Tsunami
             PrivateFontCollection pfc = new PrivateFontCollection();
             pfc.AddFontFile("Font\\Koruri-Regular.ttf");
             font = pfc.Families[0];
-            //Draw();
+            Draw();
 
             //Draw("F:\\ダウンロード\\eqvol_l-20230720-tsunamiyohou.xml", true);
-            Draw("F:\\ダウンロード\\201611220614.xml");
+            //Draw("F:\\ダウンロード\\201611220614.xml");
             //Draw("F:\\ダウンロード\\20220115175401_0_VTSE41_010000.xml");
             //Draw("F:\\ダウンロード\\20220316143936_0_VTSE41_270000.xml");
             //Draw("https://www.data.jma.go.jp/developer/xml/data/20230716072840_0_VTSE41_270000.xml");

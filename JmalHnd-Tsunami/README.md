@@ -25,6 +25,11 @@
 #### v1.0.1
 2023/07/21
 
+<div display="flex">
+  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/master/image/v1.0.1-1.png" width="24%" />
+  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/master/image/v1.0.1-2.png" width="24%" />
+</div>
+
 - 情報がない場合の描画を追加
 - 情報未受信時の表示を追加
 - 情報失効時の表示を追加
