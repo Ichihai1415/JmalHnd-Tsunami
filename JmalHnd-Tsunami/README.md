@@ -11,10 +11,10 @@
 
 ### サンプル画像
 <div display="flex">
-  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/main/image/v1.0.0-1.png" width="24%" />
-  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/main/image/v1.0.0-2.png" width="24%" />
-  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/main/image/v1.0.0-3.png" width="24%" />
-  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/main/image/v1.0.0-4.png" width="24%" />
+  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/master/image/v1.0.0-1.png" width="24%" />
+  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/master/image/v1.0.0-2.png" width="24%" />
+  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/master/image/v1.0.0-3.png" width="24%" />
+  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/master/image/v1.0.0-4.png" width="24%" />
 </div>
 
 ### 履歴
