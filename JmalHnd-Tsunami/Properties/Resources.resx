@@ -124,4 +124,10 @@
   <data name="AreaTsunami_GIS_0_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\AreaTsunami_GIS_0.1.geojson;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="Koruri_LICENSE" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Koruri-LICENSE;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;shift_jis</value>
+  </data>
+  <data name="Koruri_Regular" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Koruri-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

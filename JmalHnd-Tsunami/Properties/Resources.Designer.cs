@@ -79,5 +79,38 @@ namespace JmalHnd_Tsunami.Properties {
                 return ResourceManager.GetString("AreaTsunami_GIS_0_1", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Apache License
+        ///                           Version 2.0, January 2004
+        ///                        http://www.apache.org/licenses/
+        ///
+        ///   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+        ///
+        ///   1. Definitions.
+        ///
+        ///      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+        ///      and distribution as defined by Sections 1 through 9 of this document.
+        ///
+        ///      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+        ///      the copyright owner that is granting the License.
+        ///
+        ///      &quot; [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Koruri_LICENSE {
+            get {
+                return ResourceManager.GetString("Koruri_LICENSE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Byte[] のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static byte[] Koruri_Regular {
+            get {
+                object obj = ResourceManager.GetObject("Koruri_Regular", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

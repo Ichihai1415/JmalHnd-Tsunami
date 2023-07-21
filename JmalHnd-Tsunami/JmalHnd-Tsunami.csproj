@@ -108,6 +108,8 @@
     </None>
     <None Include="Resources\AreaForecastLocalEEW_GIS_0.05.geojson" />
     <None Include="Resources\AreaTsunami_GIS_0.1.geojson" />
+    <None Include="Resources\Koruri-LICENSE" />
+    <None Include="Resources\Koruri-Regular.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
