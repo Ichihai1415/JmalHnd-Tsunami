@@ -1,1 +1,1 @@
-Ú×‚Í[‚±‚±](https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/main/JmalHnd-Tsunami/README.md)
+è©³ç´°ã¯[ã“ã“](https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/main/JmalHnd-Tsunami/README.md)
