@@ -20,7 +20,7 @@
   <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/master/image/v1.0.0-4.png" width="24%" />
 </div>
 
-### 履歴
+## 履歴
 
 #### v1.0.2
 
@@ -41,7 +41,7 @@
 - フォントを同梱
 - 処理修正
 
-#### v1.0.0
+### v1.0.0
 2023/07/21
 
 - とりあえず。
