@@ -27,7 +27,7 @@ namespace JmalHnd_Tsunami
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Console.WriteLine("////////////////////////\n/JmalHnd-Tsunami v1.0.1/\n////////////////////////\n準備中...");
+            Console.WriteLine("////////////////////////\n/JmalHnd-Tsunami v1.0.2/\n////////////////////////\n準備中...");
             if (!Directory.Exists("Font"))
                 Directory.CreateDirectory("Font");
             if (!File.Exists("Font\\Koruri-Regular.ttf"))
@@ -39,13 +39,30 @@ namespace JmalHnd_Tsunami
             font = pfc.Families[0];
             Draw();
 
-            //Draw("F:\\ダウンロード\\eqvol_l-20230720-tsunamiyohou.xml", true);
+            //以下デバッグ用
+            //Draw(1);//スキップ
             //Draw("F:\\ダウンロード\\201611220614.xml");
             //Draw("F:\\ダウンロード\\20220115175401_0_VTSE41_010000.xml");
             //Draw("F:\\ダウンロード\\20220316143936_0_VTSE41_270000.xml");
-            //Draw("https://www.data.jma.go.jp/developer/xml/data/20230716072840_0_VTSE41_270000.xml");
         }
-        public void Draw(string Uri = "https://www.data.jma.go.jp/developer/xml/feed/eqvol.xml", bool feed = false)
+
+        /// <summary>
+        /// デバッグで古い情報取得用(feedのみ)
+        /// </summary>
+        /// <param name="skip">スキップする数</param>
+        /// <param name="Uri">URL 既定は高頻度feed</param>
+        public void Draw(int skip, string Uri = "https://www.data.jma.go.jp/developer/xml/feed/eqvol.xml")
+        {
+            Draw(Uri, true, skip);
+        }
+
+        /// <summary>
+        /// 描画します。
+        /// </summary>
+        /// <param name="Uri">URL 既定は高頻度feed</param>
+        /// <param name="feed">feedの場合true</param>
+        /// <param name="skip">(デバッグ用、Draw(int skip, [string Uri])を推奨)スキップする数 既定は0</param>
+        public void Draw(string Uri = "https://www.data.jma.go.jp/developer/xml/feed/eqvol.xml", bool feed = false, int skip = 0)
         {
             try
             {
@@ -65,6 +82,11 @@ namespace JmalHnd_Tsunami
                     {
                         if (node.SelectSingleNode("atom:title", nsmgr).InnerText == "津波警報・注意報・予報a")
                         {
+                            if (skip != 0)
+                            {
+                                skip--;
+                                continue;
+                            }
                             string URL2 = node.SelectSingleNode("atom:id", nsmgr).InnerText;
                             if (URL2 == LastURL)
                             {
@@ -101,15 +123,19 @@ namespace JmalHnd_Tsunami
                     nsmgr.AddNamespace("jmx_eb", "http://xml.kishou.go.jp/jmaxml1/elementBasis1/");
                     foreach (XmlNode infos in xml.SelectNodes("jmx:Report/jmx_se:Body/jmx_se:Tsunami/jmx_se:Forecast/jmx_se:Item", nsmgr))
                     {
+                        //エリア名とコード
                         string name = infos.SelectSingleNode("jmx_se:Area/jmx_se:Name", nsmgr).InnerText;
                         string code = infos.SelectSingleNode("jmx_se:Area/jmx_se:Code", nsmgr).InnerText;
-                        //(未到達はnull)　ただちに津波来襲と予測　津波到達中と推測　第１波の到達を確認
+                        //大津波警報　津波警報　津波注意報　津波予報
                         string level = infos.SelectSingleNode("jmx_se:Category/jmx_se:Kind/jmx_se:Name", nsmgr).InnerText.Replace("（若干の海面変動）", "");
+                        //(到達後はnull)
                         XmlNode ArrivalTime = infos.SelectSingleNode("jmx_se:FirstHeight/jmx_se:ArrivalTime", nsmgr);
                         string time = ArrivalTime == null ? "" : DateTime.Parse(ArrivalTime.InnerText).ToString("MM/dd HH:mm");
                         XmlNode Condition = infos.SelectSingleNode("jmx_se:FirstHeight/jmx_se:Condition", nsmgr);
+                        //(未到達はnull)　ただちに津波来襲と予測　津波到達中と推測　第１波の到達を確認
                         string state = Condition == null ? "" : Condition.InnerText; ;
-                        string height = ((XmlElement)infos.SelectSingleNode("jmx_se:MaxHeight/jmx_eb:TsunamiHeight", nsmgr)).GetAttribute("description");
+                        //(津波予報に引き下げられたとき?(要確認)null) 巨大(要確認) １０ｍ　０．２ｍ未満
+                        string height = infos.SelectSingleNode("jmx_se:MaxHeight/jmx_eb:TsunamiHeight", nsmgr) == null ? "" : ((XmlElement)infos.SelectSingleNode("jmx_se:MaxHeight/jmx_eb:TsunamiHeight", nsmgr)).GetAttribute("description");
                         Console.WriteLine($"{name} {level} {time} {state} {height}");
                         CodeWarn.Add(code, level);
                         Infos.Add(new TsunamiInfo
@@ -337,6 +363,7 @@ namespace JmalHnd_Tsunami
                     $"\n//////////////////////////////////////////////////\n内容:{ex}");
             }
         }
+
 
         /// <summary>
         /// 津波情報のグレード別に色を返します。
