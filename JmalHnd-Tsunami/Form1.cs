@@ -351,6 +351,7 @@ namespace JmalHnd_Tsunami
                     }
                     else
                         Console.WriteLine("[お知らせ]outputフォルダを作るとxmlファイル・画像ファイルが保存されます。");
+                BackgroundImage = null;
                 BackgroundImage = bitmap;
                 g.Dispose();
                 //throw new Exception("デバック用");
