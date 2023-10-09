@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
             this.CMS = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.TSMGetnow = new System.Windows.Forms.ToolStripMenuItem();
             this.TSM_LongFeed = new System.Windows.Forms.ToolStripMenuItem();
             this.TSM_ReleaseSite = new System.Windows.Forms.ToolStripMenuItem();
             this.CMS.SuspendLayout();
@@ -46,22 +47,30 @@
             // 
             this.CMS.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.CMS.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TSMGetnow,
             this.TSM_LongFeed,
             this.TSM_ReleaseSite});
             this.CMS.Name = "CMS";
-            this.CMS.Size = new System.Drawing.Size(225, 52);
+            this.CMS.Size = new System.Drawing.Size(192, 92);
+            // 
+            // TSMGetnow
+            // 
+            this.TSMGetnow.Name = "TSMGetnow";
+            this.TSMGetnow.Size = new System.Drawing.Size(191, 22);
+            this.TSMGetnow.Text = "今すぐ取得する";
+            this.TSMGetnow.Click += new System.EventHandler(this.TSMGetnow_Click);
             // 
             // TSM_LongFeed
             // 
             this.TSM_LongFeed.Name = "TSM_LongFeed";
-            this.TSM_LongFeed.Size = new System.Drawing.Size(224, 24);
+            this.TSM_LongFeed.Size = new System.Drawing.Size(191, 22);
             this.TSM_LongFeed.Text = "長期フィードから取得する";
             this.TSM_LongFeed.Click += new System.EventHandler(this.TSM_LongFeed_Click);
             // 
             // TSM_ReleaseSite
             // 
             this.TSM_ReleaseSite.Name = "TSM_ReleaseSite";
-            this.TSM_ReleaseSite.Size = new System.Drawing.Size(224, 24);
+            this.TSM_ReleaseSite.Size = new System.Drawing.Size(191, 22);
             this.TSM_ReleaseSite.Text = "配布サイト";
             this.TSM_ReleaseSite.Click += new System.EventHandler(this.TSM_ReleaseSite_Click);
             // 
@@ -86,6 +95,7 @@
         private System.Windows.Forms.ContextMenuStrip CMS;
         private System.Windows.Forms.ToolStripMenuItem TSM_LongFeed;
         private System.Windows.Forms.ToolStripMenuItem TSM_ReleaseSite;
+        private System.Windows.Forms.ToolStripMenuItem TSMGetnow;
     }
 }
 

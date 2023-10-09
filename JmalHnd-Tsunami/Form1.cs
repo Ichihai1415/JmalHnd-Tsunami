@@ -24,10 +24,12 @@ namespace JmalHnd_Tsunami
         public static FontFamily font;
         public string LastURL = "";
         public bool LastExist = true;
+        public static readonly RectangleF drawRect = new RectangleF(10, 10, 1060, 1060);
+        public static bool debugging = false;
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Console.WriteLine("////////////////////////\n/JmalHnd-Tsunami v1.0.2/\n////////////////////////\n準備中...");
+            Console.WriteLine("////////////////////////\n/JmalHnd-Tsunami v1.0.3/\n////////////////////////\n準備中...");
             if (!Directory.Exists("Font"))
                 Directory.CreateDirectory("Font");
             if (!File.Exists("Font\\Koruri-Regular.ttf"))
@@ -37,9 +39,11 @@ namespace JmalHnd_Tsunami
             PrivateFontCollection pfc = new PrivateFontCollection();
             pfc.AddFontFile("Font\\Koruri-Regular.ttf");
             font = pfc.Families[0];
-            Draw();
+
+            Draw(); return;
 
             //以下デバッグ用
+            debugging = true;
             //Draw(1);//スキップ
             //Draw("F:\\ダウンロード\\201611220614.xml");
             //Draw("F:\\ダウンロード\\20220115175401_0_VTSE41_010000.xml");
@@ -324,14 +328,26 @@ namespace JmalHnd_Tsunami
                     string Comment2 = Text == null ? "" : Text.InnerText;
                     XmlNode ForeEnd = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:ValidDateTime", nsmgr);//津波予報の失効時刻
                     string ValidDateTime = ForeEnd == null ? "" : $"\n{DateTime.Parse(ForeEnd.InnerText):yyyy/MM/dd HH:mm}まで有効";
-                    g.DrawString(Zen2Han($"{AnoTime}発表  {Office}  ID:{EventID}\n<震源要素>\n{EqTime}    {Hypo}{SubHypo}\n{Location.Replace("深さ　", "深さ").Replace("　", " ")}  {Magnitude}\n<詳細情報>\n{Comment1}\n{Comment2.Replace("。　", "。\n").Replace("　", "")}{ValidDateTime}"), new Font(font, 18), Brushes.White, 10, 10);
+                    g.DrawString(Zen2Han($"{AnoTime}発表  {Office}  ID:{EventID}\n<震源要素>\n{EqTime}    {Hypo}{SubHypo}\n{Location.Replace("深さ　", "深さ").Replace("　", " ")}  {Magnitude}\n<詳細情報>\n{Comment1}\n{Comment2.Replace("。　", "。\n").Replace("　", "")}{ValidDateTime}"), new Font(font, 18), Brushes.White, drawRect);
                     g.DrawString("気象データ・地図データ:気象庁", new Font(font, 20), Brushes.White, 680, 1040);
-                    if (ForeEnd != null)
+                    if (ForeEnd == null)//津波注意報以上
+                    {
+                        if (debugging)
+                        {
+                            g.FillRectangle(new SolidBrush(Color.FromArgb(64, 0, 0, 0)), 0, 0, 1920, 1080);
+                            g.DrawString("現在のデータではありません。", new Font(font, 40), Brushes.White, 576, 500);
+                        }
+                        GetTimer.Interval = 60000;//1m
+                    }
+                    else
+                    {
+                        GetTimer.Interval = 300000;//5m
                         if (DateTime.Parse(ForeEnd.InnerText) < DateTime.Now)
                         {
                             g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 0)), 0, 0, 1920, 1080);
                             g.DrawString("この情報は既に失効しています", new Font(font, 40), Brushes.White, 576, 500);
                         }
+                    }
                 }
                 else
                 {
@@ -356,6 +372,7 @@ namespace JmalHnd_Tsunami
                 g.Dispose();
                 //throw new Exception("デバック用");
                 Console.WriteLine($"処理が完了しました。({DateTime.Now:HH:mm:ss.ff})");
+                Console.WriteLine($"取得間隔:{GetTimer.Interval}  次回取得:{DateTime.Now.AddMilliseconds(GetTimer.Interval):HH:mm:ss}ごろ");
             }
             catch (Exception ex)
             {
@@ -414,6 +431,11 @@ namespace JmalHnd_Tsunami
         private void TSM_ReleaseSite_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/Ichihai1415/JmalHnd-Tsunami/releases");
+        }
+
+        private void TSMGetnow_Click(object sender, EventArgs e)
+        {
+            Draw();
         }
     }
     public class TsunamiInfo
