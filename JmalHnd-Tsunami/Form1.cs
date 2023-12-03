@@ -26,10 +26,11 @@ namespace JmalHnd_Tsunami
         public bool LastExist = true;
         public static readonly RectangleF drawRect = new RectangleF(10, 10, 1060, 1060);
         public static bool debugging = false;
+        public static string LastAreas = "";
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Console.WriteLine("////////////////////////\n/JmalHnd-Tsunami v1.0.3/\n////////////////////////\n準備中...");
+            Console.WriteLine("////////////////////////\n/JmalHnd-Tsunami v1.0.4/\n////////////////////////\n準備中...");
             if (!Directory.Exists("Font"))
                 Directory.CreateDirectory("Font");
             if (!File.Exists("Font\\Koruri-Regular.ttf"))
@@ -71,6 +72,7 @@ namespace JmalHnd_Tsunami
             try
             {
                 Console.Clear();
+                Console.Write("\x1b[3J");//環境によりすべてクリアされないことがあるため
                 bool Exist = true;
                 Console.WriteLine($"処理を開始します。({DateTime.Now:HH:mm:ss.ff})");
                 XmlDocument xml = new XmlDocument();
@@ -96,6 +98,9 @@ namespace JmalHnd_Tsunami
                             {
                                 Console.WriteLine($"見つかりました。前回と同一のため取得はしません。");
                                 Console.WriteLine($"処理が完了しました。({DateTime.Now:HH:mm:ss.ff})");
+                                Console.WriteLine($"取得間隔:{GetTimer.Interval}  次回取得:{DateTime.Now.AddMilliseconds(GetTimer.Interval):HH:mm:ss}ごろ");
+                                Console.WriteLine($"前回の情報:{LastAreas}");
+                                
                                 return;
                             }
                             Console.WriteLine($"見つかりました。取得中…({URL2})");
@@ -111,6 +116,7 @@ namespace JmalHnd_Tsunami
                     {
                         Console.WriteLine("見つかりませんでした。描画はしません。");
                         Console.WriteLine($"処理が完了しました。({DateTime.Now:HH:mm:ss.ff})");
+                        Console.WriteLine($"取得間隔:{GetTimer.Interval}  次回取得:{DateTime.Now.AddMilliseconds(GetTimer.Interval):HH:mm:ss}ごろ");
                         return;
                     }
                 }
@@ -125,6 +131,7 @@ namespace JmalHnd_Tsunami
                     nsmgr.AddNamespace("jmx_ib", "http://xml.kishou.go.jp/jmaxml1/informationBasis1/");
                     nsmgr.AddNamespace("jmx_se", "http://xml.kishou.go.jp/jmaxml1/body/seismology1/");
                     nsmgr.AddNamespace("jmx_eb", "http://xml.kishou.go.jp/jmaxml1/elementBasis1/");
+                    LastAreas = "";
                     foreach (XmlNode infos in xml.SelectNodes("jmx:Report/jmx_se:Body/jmx_se:Tsunami/jmx_se:Forecast/jmx_se:Item", nsmgr))
                     {
                         //エリア名とコード
@@ -141,6 +148,7 @@ namespace JmalHnd_Tsunami
                         //(津波予報に引き下げられたとき?(要確認)null) 巨大(要確認) １０ｍ　０．２ｍ未満
                         string height = infos.SelectSingleNode("jmx_se:MaxHeight/jmx_eb:TsunamiHeight", nsmgr) == null ? "" : ((XmlElement)infos.SelectSingleNode("jmx_se:MaxHeight/jmx_eb:TsunamiHeight", nsmgr)).GetAttribute("description");
                         Console.WriteLine($"{name} {level} {time} {state} {height}");
+                        LastAreas += $"\n{name} {level} {time} {state} {height}";
                         CodeWarn.Add(code, level);
                         Infos.Add(new TsunamiInfo
                         {
@@ -289,6 +297,7 @@ namespace JmalHnd_Tsunami
 
                 Console.WriteLine("詳細情報描画中…");
                 string EventID = "";
+                string AnoT = "";
                 g.FillRectangle(Brushes.Black, 1080, 0, 840, 1080);
                 if (Exist)
                 {
@@ -311,26 +320,33 @@ namespace JmalHnd_Tsunami
                             break;
                     }
                     string AnoTime = DateTime.Parse(xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:ReportDateTime", nsmgr).InnerText).ToString("yyyy/MM/dd HH:mm:ss");
+                    AnoT = AnoTime.Replace("/", "").Replace(":", "").Replace(" ", "");
                     string Office = xml.SelectSingleNode("jmx:Report/jmx:Control/jmx:EditorialOffice", nsmgr).InnerText;
                     EventID = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:EventID", nsmgr).InnerText;
 
-                    string EqTime = DateTime.Parse(xml.SelectSingleNode("jmx:Report/jmx_se:Body/jmx_se:Earthquake/jmx_se:OriginTime", nsmgr).InnerText).ToString("yyyy/MM/dd HH:mm");
-                    string Hypo = xml.SelectSingleNode("jmx:Report/jmx_se:Body/jmx_se:Earthquake/jmx_se:Hypocenter/jmx_se:Area/jmx_se:Name", nsmgr).InnerText;
-                    //国内
-                    XmlNode NameFromMark = xml.SelectSingleNode("jmx:Report/jmx_se:Body/jmx_se:Earthquake/jmx_se:Hypocenter/jmx_se:Area/jmx_se:NameFromMark", nsmgr);
-                    //海外
-                    XmlNode DetailedName = xml.SelectSingleNode("jmx:Report/jmx_se:Body/jmx_se:Earthquake/jmx_se:Hypocenter/jmx_se:Area/jmx_se:DetailedName", nsmgr);
-                    string SubHypo = NameFromMark != null ? $"({NameFromMark.InnerText})" : DetailedName != null ? $"({DetailedName.InnerText})" : "";
-                    string Location = ((XmlElement)xml.SelectSingleNode("jmx:Report/jmx_se:Body/jmx_se:Earthquake/jmx_se:Hypocenter/jmx_se:Area/jmx_eb:Coordinate", nsmgr)).GetAttribute("description");
-                    string Magnitude = ((XmlElement)xml.SelectSingleNode("jmx:Report/jmx_se:Body/jmx_se:Earthquake/jmx_eb:Magnitude", nsmgr)).GetAttribute("description");
                     string Comment1 = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:Headline/jmx_ib:Text", nsmgr).InnerText;
                     XmlNode Text = xml.SelectSingleNode("jmx:Report/jmx_se:Body/jmx_se:Text", nsmgr);
                     string Comment2 = Text == null ? "" : Text.InnerText;
-                    XmlNode ForeEnd = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:ValidDateTime", nsmgr);//津波予報の失効時刻
+                    XmlNode ForeEnd = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:ValidDateTime", nsmgr);//津波予報の失効時刻(ないときもある)
                     string ValidDateTime = ForeEnd == null ? "" : $"\n{DateTime.Parse(ForeEnd.InnerText):yyyy/MM/dd HH:mm}まで有効";
-                    g.DrawString(Zen2Han($"{AnoTime}発表  {Office}  ID:{EventID}\n<震源要素>\n{EqTime}    {Hypo}{SubHypo}\n{Location.Replace("深さ　", "深さ").Replace("　", " ")}  {Magnitude}\n<詳細情報>\n{Comment1}\n{Comment2.Replace("。　", "。\n").Replace("　", "")}{ValidDateTime}"), new Font(font, 18), Brushes.White, drawRect);
+                    string hypoInfo = "<震源要素>";
+                    foreach (XmlNode hypo_ in xml.SelectNodes("jmx:Report/jmx_se:Body/jmx_se:Earthquake", nsmgr))
+                    {
+                        string EqTime = DateTime.Parse(hypo_.SelectSingleNode("jmx_se:OriginTime", nsmgr).InnerText).ToString("yyyy/MM/dd HH:mm");
+                        string Hypo = hypo_.SelectSingleNode("jmx_se:Hypocenter/jmx_se:Area/jmx_se:Name", nsmgr).InnerText;
+                        //国内
+                        XmlNode NameFromMark = hypo_.SelectSingleNode("jmx_se:Hypocenter/jmx_se:Area/jmx_se:NameFromMark", nsmgr);
+                        //海外
+                        XmlNode DetailedName = hypo_.SelectSingleNode("jmx_se:Hypocenter/jmx_se:Area/jmx_se:DetailedName", nsmgr);
+                        string SubHypo = NameFromMark != null ? $"({NameFromMark.InnerText})" : DetailedName != null ? $"({DetailedName.InnerText})" : "";
+                        string Location = ((XmlElement)hypo_.SelectSingleNode("jmx_se:Hypocenter/jmx_se:Area/jmx_eb:Coordinate", nsmgr)).GetAttribute("description");
+                        string Magnitude = ((XmlElement)hypo_.SelectSingleNode("jmx_eb:Magnitude", nsmgr)).GetAttribute("description");
+                        hypoInfo += $"\n{EqTime}    {Hypo}{SubHypo}\n{Location.Replace("深さ　", "深さ").Replace("　", " ")}  {Magnitude}";
+                    }
+
+                    g.DrawString(Zen2Han($"{AnoTime}発表  {Office}  ID:{EventID}\n{hypoInfo}\n<詳細情報>\n{Comment1}\n{Comment2.Replace("。　", "。\n").Replace("　", "")}\n{ValidDateTime}"), new Font(font, 18), Brushes.White, drawRect);
                     g.DrawString("気象データ・地図データ:気象庁", new Font(font, 20), Brushes.White, 680, 1040);
-                    if (ForeEnd == null)//津波注意報以上
+                    if (ForeEnd == null)//基本津波注意報以上
                     {
                         if (debugging)
                         {
@@ -362,8 +378,8 @@ namespace JmalHnd_Tsunami
                     if (Directory.Exists("output"))
                     {
                         xml.Save($"output\\{(xml.BaseURI.Contains("/") ? xml.BaseURI.Split('/').Last() : xml.BaseURI.Split('\\').Last())}");
-                        bitmap.Save($"output\\{EventID}.png", ImageFormat.Png);
-                        Console.WriteLine($"保存完了({(xml.BaseURI.Contains("/") ? xml.BaseURI.Split('/').Last() : xml.BaseURI.Split('\\').Last())},{EventID}.png)");
+                        bitmap.Save($"output\\{EventID}.{AnoT}.png", ImageFormat.Png);
+                        Console.WriteLine($"保存完了({(xml.BaseURI.Contains("/") ? xml.BaseURI.Split('/').Last() : xml.BaseURI.Split('\\').Last())},{EventID}.{AnoT}.png)");
                     }
                     else
                         Console.WriteLine("[お知らせ]outputフォルダを作るとxmlファイル・画像ファイルが保存されます。");
