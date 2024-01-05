@@ -41,7 +41,7 @@ namespace JmalHnd_Tsunami
             pfc.AddFontFile("Font\\Koruri-Regular.ttf");
             font = pfc.Families[0];
 
-            Draw(); return;
+            Draw(); return;//デバッグ時コメント
 
             //以下デバッグ用
             debugging = true;
@@ -49,6 +49,11 @@ namespace JmalHnd_Tsunami
             //Draw("F:\\ダウンロード\\201611220614.xml");
             //Draw("F:\\ダウンロード\\20220115175401_0_VTSE41_010000.xml");
             //Draw("F:\\ダウンロード\\20220316143936_0_VTSE41_270000.xml");
+            //Draw("C:\\Ichihai1415\\source\\vs\\JmalHnd-Tsunami\\JmalHnd-Tsunami\\bin\\x64\\Debug\\output\\20240101071254_0_VTSE41_010000.xml");
+            //Draw("C:\\Ichihai1415\\source\\vs\\JmalHnd-Tsunami\\JmalHnd-Tsunami\\bin\\x64\\Debug\\output\\20240101072233_0_VTSE41_010000.xml");
+            //Draw("C:\\Ichihai1415\\source\\vs\\JmalHnd-Tsunami\\JmalHnd-Tsunami\\bin\\x64\\Debug\\output\\20240101161519_0_VTSE41_010000.xml");
+            //Draw("C:\\Ichihai1415\\source\\vs\\JmalHnd-Tsunami\\JmalHnd-Tsunami\\bin\\x64\\Debug\\output\\20240102010011_0_VTSE41_010000.xml");
+
         }
 
         /// <summary>
@@ -137,8 +142,8 @@ namespace JmalHnd_Tsunami
                         //エリア名とコード
                         string name = infos.SelectSingleNode("jmx_se:Area/jmx_se:Name", nsmgr).InnerText;
                         string code = infos.SelectSingleNode("jmx_se:Area/jmx_se:Code", nsmgr).InnerText;
-                        //大津波警報　津波警報　津波注意報　津波予報
-                        string level = infos.SelectSingleNode("jmx_se:Category/jmx_se:Kind/jmx_se:Name", nsmgr).InnerText.Replace("（若干の海面変動）", "");
+                        //大津波警報　津波警報　津波注意報　津波予報//大津波警報で"大津波警報：発表"のケースがあった
+                        string level = infos.SelectSingleNode("jmx_se:Category/jmx_se:Kind/jmx_se:Name", nsmgr).InnerText.Split('：')[0].Replace("（若干の海面変動）", "");
                         //(到達後はnull)
                         XmlNode ArrivalTime = infos.SelectSingleNode("jmx_se:FirstHeight/jmx_se:ArrivalTime", nsmgr);
                         string time = ArrivalTime == null ? "" : DateTime.Parse(ArrivalTime.InnerText).ToString("MM/dd HH:mm");

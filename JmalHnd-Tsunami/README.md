@@ -14,13 +14,21 @@
 ### サンプル画像
 <!--GitHubで確認できます-->
 <div display="flex">
-  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/master/image/v1.0.0-1.png" width="24%" />
-  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/master/image/v1.0.0-2.png" width="24%" />
-  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/master/image/v1.0.0-3.png" width="24%" />
-  <img src="https://github.com/Ichihai1415/JmalHnd-Tsunami/blob/master/image/v1.0.0-4.png" width="24%" />
+  <img src="https://raw.githubusercontent.com/Ichihai1415/JmalHnd-Tsunami/master/image/v1.0.0-1.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/Ichihai1415/JmalHnd-Tsunami/master/image/v1.0.0-2.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/Ichihai1415/JmalHnd-Tsunami/master/image/v1.0.0-3.png" width="32%" />
+</div><div display="flex">
+  <img src="https://raw.githubusercontent.com/Ichihai1415/JmalHnd-Tsunami/master/image/v1.0.0-4.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/Ichihai1415/JmalHnd-Tsunami/master/image/v1.0.1-2.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/Ichihai1415/JmalHnd-Tsunami/master/image/v1.0.5-1.png" width="32%" />
 </div>
 
 ## 履歴
+### v1.0.5
+2024/01/05
+
+- 大津波警報の時色が表示されず表示がおかしくなる問題を修正
+
 ### v1.0.4
 2023/12/03
 
