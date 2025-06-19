@@ -21,13 +21,13 @@ namespace JmalHnd_Tsunami
             InitializeComponent();
         }
 
-        public static FontFamily font;
-        public string LastURL = "";
-        public bool LastExist = true;
-        public static readonly RectangleF drawRect = new RectangleF(10, 10, 1060, 1060);
-        public static bool debugging = false;
-        public static string LastAreas = "";
-        public static DateTime LastForeEnd = DateTime.MinValue;
+        internal static FontFamily font;
+        internal string LastURL = "";
+        internal bool LastExist = true;
+        internal static readonly RectangleF drawRect = new RectangleF(10, 10, 1060, 1060);
+        internal static bool debugging = false;
+        internal static string LastAreas = "";
+        internal static DateTime LastForeValid = DateTime.MaxValue;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -102,6 +102,11 @@ namespace JmalHnd_Tsunami
                             string URL2 = node.SelectSingleNode("atom:id", nsmgr).InnerText;
                             if (URL2 == LastURL)
                             {
+                                if (DateTime.Now > LastForeValid)
+                                {
+                                    Console.WriteLine($"見つかりました。前回と同一ですが、失効表示のため再取得します。");
+                                    goto ForeEnd;
+                                }
                                 Console.WriteLine($"見つかりました。前回と同一のため取得はしません。");
                                 Console.WriteLine($"処理が完了しました。({DateTime.Now:HH:mm:ss.ff})");
                                 Console.WriteLine($"取得間隔:{GetTimer.Interval}  次回取得:{DateTime.Now.AddMilliseconds(GetTimer.Interval):HH:mm:ss}ごろ");
@@ -110,6 +115,7 @@ namespace JmalHnd_Tsunami
                                 return;
                             }
                             Console.WriteLine($"見つかりました。取得中…({URL2})");
+                        ForeEnd:
                             xml.Load(URL2);
                             LastURL = URL2;
                             Exist = true;
@@ -335,6 +341,7 @@ namespace JmalHnd_Tsunami
                     string Comment2 = Text == null ? "" : Text.InnerText;
                     XmlNode ForeEnd = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:ValidDateTime", nsmgr);//津波予報の失効時刻(ないときもある)
                     string ValidDateTime = ForeEnd == null ? "" : $"\n{DateTime.Parse(ForeEnd.InnerText):yyyy/MM/dd HH:mm}まで有効";
+                    LastForeValid = ForeEnd == null ? DateTime.MaxValue : DateTime.Parse(ForeEnd.InnerText);
                     string hypoInfo = "<震源要素>";
                     foreach (XmlNode hypo_ in xml.SelectNodes("jmx:Report/jmx_se:Body/jmx_se:Earthquake", nsmgr))
                     {
