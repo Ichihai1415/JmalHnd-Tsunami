@@ -28,64 +28,53 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.GetTimer = new System.Windows.Forms.Timer(this.components);
-            this.CMS = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.TSMGetnow = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSM_LongFeed = new System.Windows.Forms.ToolStripMenuItem();
-            this.TSM_ReleaseSite = new System.Windows.Forms.ToolStripMenuItem();
-            this.CMS.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            GetTimer = new System.Windows.Forms.Timer(components);
+            CMS = new System.Windows.Forms.ContextMenuStrip(components);
+            TSMGetnow = new System.Windows.Forms.ToolStripMenuItem();
+            TSM_ReleaseSite = new System.Windows.Forms.ToolStripMenuItem();
+            CMS.SuspendLayout();
+            SuspendLayout();
             // 
             // GetTimer
             // 
-            this.GetTimer.Enabled = true;
-            this.GetTimer.Interval = 300000;
-            this.GetTimer.Tick += new System.EventHandler(this.GetTimer_Tick);
+            GetTimer.Enabled = true;
+            GetTimer.Interval = 300000;
+            GetTimer.Tick += GetTimer_Tick;
             // 
             // CMS
             // 
-            this.CMS.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.CMS.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.TSMGetnow,
-            this.TSM_LongFeed,
-            this.TSM_ReleaseSite});
-            this.CMS.Name = "CMS";
-            this.CMS.Size = new System.Drawing.Size(192, 92);
+            CMS.ImageScalingSize = new System.Drawing.Size(20, 20);
+            CMS.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { TSMGetnow, TSM_ReleaseSite });
+            CMS.Name = "CMS";
+            CMS.Size = new System.Drawing.Size(181, 70);
             // 
             // TSMGetnow
             // 
-            this.TSMGetnow.Name = "TSMGetnow";
-            this.TSMGetnow.Size = new System.Drawing.Size(191, 22);
-            this.TSMGetnow.Text = "今すぐ取得する";
-            this.TSMGetnow.Click += new System.EventHandler(this.TSMGetnow_Click);
-            // 
-            // TSM_LongFeed
-            // 
-            this.TSM_LongFeed.Name = "TSM_LongFeed";
-            this.TSM_LongFeed.Size = new System.Drawing.Size(191, 22);
-            this.TSM_LongFeed.Text = "長期フィードから取得する";
-            this.TSM_LongFeed.Click += new System.EventHandler(this.TSM_LongFeed_Click);
+            TSMGetnow.Name = "TSMGetnow";
+            TSMGetnow.Size = new System.Drawing.Size(180, 22);
+            TSMGetnow.Text = "今すぐ取得する";
+            TSMGetnow.Click += TSMGetnow_Click;
             // 
             // TSM_ReleaseSite
             // 
-            this.TSM_ReleaseSite.Name = "TSM_ReleaseSite";
-            this.TSM_ReleaseSite.Size = new System.Drawing.Size(191, 22);
-            this.TSM_ReleaseSite.Text = "配布サイト";
-            this.TSM_ReleaseSite.Click += new System.EventHandler(this.TSM_ReleaseSite_Click);
+            TSM_ReleaseSite.Name = "TSM_ReleaseSite";
+            TSM_ReleaseSite.Size = new System.Drawing.Size(180, 22);
+            TSM_ReleaseSite.Text = "配布サイト";
+            TSM_ReleaseSite.Click += TSM_ReleaseSite_Click;
             // 
             // Form1
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ClientSize = new System.Drawing.Size(1280, 720);
-            this.ContextMenuStrip = this.CMS;
-            this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "Form1";
-            this.Text = "JmalHnd-Tsunami";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.CMS.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            ClientSize = new System.Drawing.Size(1280, 720);
+            ContextMenuStrip = CMS;
+            Margin = new System.Windows.Forms.Padding(2);
+            Name = "Form1";
+            Text = "JmalHnd-Tsunami";
+            Load += Form1_Load;
+            CMS.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 
@@ -93,7 +82,6 @@
 
         private System.Windows.Forms.Timer GetTimer;
         private System.Windows.Forms.ContextMenuStrip CMS;
-        private System.Windows.Forms.ToolStripMenuItem TSM_LongFeed;
         private System.Windows.Forms.ToolStripMenuItem TSM_ReleaseSite;
         private System.Windows.Forms.ToolStripMenuItem TSMGetnow;
     }

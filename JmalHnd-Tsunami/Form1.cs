@@ -28,6 +28,7 @@ namespace JmalHnd_Tsunami
         internal static bool debugging = false;
         internal static string LastAreas = "";
         internal static DateTime LastForeValid = DateTime.MaxValue;
+        internal static bool LastIsValid = false;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -62,7 +63,7 @@ namespace JmalHnd_Tsunami
         /// </summary>
         /// <param name="skip">スキップする数</param>
         /// <param name="Uri">URL 既定は高頻度feed</param>
-        public void Draw(int skip, string Uri = "https://www.data.jma.go.jp/developer/xml/feed/eqvol.xml")
+        public void Draw(int skip, string Uri = "https://www.data.jma.go.jp/developer/xml/feed/eqvol_l.xml")
         {
             Draw(Uri, true, skip);
         }
@@ -73,7 +74,7 @@ namespace JmalHnd_Tsunami
         /// <param name="Uri">URL 既定は高頻度feed</param>
         /// <param name="feed">feedの場合true</param>
         /// <param name="skip">(デバッグ用、Draw(int skip, [string Uri])を推奨)スキップする数 既定は0</param>
-        public void Draw(string Uri = "https://www.data.jma.go.jp/developer/xml/feed/eqvol.xml", bool feed = false, int skip = 0)
+        public void Draw(string Uri = "https://www.data.jma.go.jp/developer/xml/feed/eqvol_l.xml", bool feed = false, int skip = 0)
         {
             try
             {
@@ -102,7 +103,7 @@ namespace JmalHnd_Tsunami
                             string URL2 = node.SelectSingleNode("atom:id", nsmgr).InnerText;
                             if (URL2 == LastURL)
                             {
-                                if (DateTime.Now > LastForeValid)
+                                if (DateTime.Now > LastForeValid && LastIsValid)
                                 {
                                     Console.WriteLine($"見つかりました。前回と同一ですが、失効表示のため再取得します。");
                                     goto ForeEnd;
@@ -359,6 +360,7 @@ namespace JmalHnd_Tsunami
 
                     g.DrawString(Zen2Han($"{AnoTime}発表  {Office}  ID:{EventID}\n{hypoInfo}\n<詳細情報>\n{Comment1}\n{Comment2.Replace("。　", "。\n").Replace("　", "")}\n{ValidDateTime}"), new Font(font, 18), Brushes.White, drawRect);
                     g.DrawString("気象データ・地図データ:気象庁", new Font(font, 20), Brushes.White, 680, 1040);
+                    LastIsValid = true;
                     if (ForeEnd == null)//基本津波注意報以上
                     {
                         if (debugging)
@@ -375,6 +377,7 @@ namespace JmalHnd_Tsunami
                         {
                             g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 0)), 0, 0, 1920, 1080);
                             g.DrawString("この情報は既に失効しています", new Font(font, 40), Brushes.White, 576, 500);
+                            LastIsValid = false;
                         }
                     }
                 }
