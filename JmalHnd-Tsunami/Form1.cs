@@ -27,6 +27,7 @@ namespace JmalHnd_Tsunami
         public static readonly RectangleF drawRect = new RectangleF(10, 10, 1060, 1060);
         public static bool debugging = false;
         public static string LastAreas = "";
+        public static DateTime LastForeEnd = DateTime.MinValue;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -105,7 +106,7 @@ namespace JmalHnd_Tsunami
                                 Console.WriteLine($"処理が完了しました。({DateTime.Now:HH:mm:ss.ff})");
                                 Console.WriteLine($"取得間隔:{GetTimer.Interval}  次回取得:{DateTime.Now.AddMilliseconds(GetTimer.Interval):HH:mm:ss}ごろ");
                                 Console.WriteLine($"前回の情報:{LastAreas}");
-                                
+
                                 return;
                             }
                             Console.WriteLine($"見つかりました。取得中…({URL2})");
