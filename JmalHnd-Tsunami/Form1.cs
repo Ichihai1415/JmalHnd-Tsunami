@@ -24,7 +24,7 @@ namespace JmalHnd_Tsunami
         internal static FontFamily font;
         internal string LastURL = "";
         internal bool LastExist = true;
-        internal static readonly RectangleF drawRect = new RectangleF(10, 10, 1060, 1060);
+        internal static readonly RectangleF drawRect = new RectangleF(5, 5, 1080, 1080);
         internal static bool debugging = false;
         internal static string LastAreas = "";
         internal static DateTime LastForeValid = DateTime.MaxValue;
@@ -32,7 +32,7 @@ namespace JmalHnd_Tsunami
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Console.WriteLine("////////////////////////\n/JmalHnd-Tsunami v1.0.4/\n////////////////////////\n準備中...");
+            Console.WriteLine("////////////////////////\n/JmalHnd-Tsunami v1.0.6/\n////////////////////////\n準備中...");
             if (!Directory.Exists("Font"))
                 Directory.CreateDirectory("Font");
             if (!File.Exists("Font\\Koruri-Regular.ttf"))
@@ -93,7 +93,7 @@ namespace JmalHnd_Tsunami
                     Console.WriteLine("feedから津波情報を検索中…");
                     foreach (XmlNode node in xml.SelectNodes("atom:feed/atom:entry", nsmgr))
                     {
-                        if (node.SelectSingleNode("atom:title", nsmgr).InnerText == "津波警報・注意報・予報a")
+                        if (node.SelectSingleNode("atom:title", nsmgr).InnerText == "津波警報・注意報・予報a" || node.SelectSingleNode("atom:title", nsmgr).InnerText == "津波情報a")
                         {
                             if (skip != 0)
                             {
@@ -138,6 +138,7 @@ namespace JmalHnd_Tsunami
 
                 Dictionary<string, string> CodeWarn = new Dictionary<string, string>();
                 List<TsunamiInfo> Infos = new List<TsunamiInfo>();
+                bool save = false;
                 if (Exist)
                 {
                     nsmgr.AddNamespace("jmx", "http://xml.kishou.go.jp/jmaxml1/");
@@ -337,9 +338,19 @@ namespace JmalHnd_Tsunami
                     string Office = xml.SelectSingleNode("jmx:Report/jmx:Control/jmx:EditorialOffice", nsmgr).InnerText;
                     EventID = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:EventID", nsmgr).InnerText;
 
+                    string title = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:Title", nsmgr).InnerText;
+                    save = title == "津波警報・津波注意報・津波予報";
+                    string serial = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:Serial", nsmgr).InnerText.Replace("\n", "");
+                    if (serial != "")
+                        serial = " #" + serial;
                     string Comment1 = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:Headline/jmx_ib:Text", nsmgr).InnerText;
                     XmlNode Text = xml.SelectSingleNode("jmx:Report/jmx_se:Body/jmx_se:Text", nsmgr);
+                    if (Text == null && title != "津波警報・津波注意報・津波予報")
+                        Text = xml.SelectSingleNode("jmx:Report/jmx_se:Body/jmx_se:Comments/jmx_se:WarningComment/jmx_se:Text", nsmgr);
+
+                    //Text = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:Text", nsmgr);//津波予報のときはない
                     string Comment2 = Text == null ? "" : Text.InnerText;
+
                     XmlNode ForeEnd = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:ValidDateTime", nsmgr);//津波予報の失効時刻(ないときもある)
                     string ValidDateTime = ForeEnd == null ? "" : $"\n{DateTime.Parse(ForeEnd.InnerText):yyyy/MM/dd HH:mm}まで有効";
                     LastForeValid = ForeEnd == null ? DateTime.MaxValue : DateTime.Parse(ForeEnd.InnerText);
@@ -358,7 +369,7 @@ namespace JmalHnd_Tsunami
                         hypoInfo += $"\n{EqTime}    {Hypo}{SubHypo}\n{Location.Replace("深さ　", "深さ").Replace("　", " ")}  {Magnitude}";
                     }
 
-                    g.DrawString(Zen2Han($"{AnoTime}発表  {Office}  ID:{EventID}\n{hypoInfo}\n<詳細情報>\n{Comment1}\n{Comment2.Replace("。　", "。\n").Replace("　", "")}\n{ValidDateTime}"), new Font(font, 18), Brushes.White, drawRect);
+                    g.DrawString(Zen2Han($"{AnoTime}発表 {title}{serial}  {EventID} {Office}\n\n{hypoInfo}\n<詳細情報>\n{Comment1}\n\n{Comment2.Replace("。　", "。\n").Replace("　", "")}\n{ValidDateTime}"), new Font(font, 18), Brushes.White, drawRect);
                     g.DrawString("気象データ・地図データ:気象庁", new Font(font, 20), Brushes.White, 680, 1040);
                     LastIsValid = true;
                     if (ForeEnd == null)//基本津波注意報以上
@@ -390,7 +401,7 @@ namespace JmalHnd_Tsunami
                 }
 
                 Console.WriteLine("描画完了");
-                if (Exist)
+                if (Exist && save)
                     if (Directory.Exists("output"))
                     {
                         xml.Save($"output\\{(xml.BaseURI.Contains("/") ? xml.BaseURI.Split('/').Last() : xml.BaseURI.Split('\\').Last())}");
