@@ -339,13 +339,13 @@ namespace JmalHnd_Tsunami
                     EventID = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:EventID", nsmgr).InnerText;
 
                     string title = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:Title", nsmgr).InnerText;
-                    save = title == "津波警報・津波注意報・津波予報";
+                    save = title.Contains("津波予報");
                     string serial = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:Serial", nsmgr).InnerText.Replace("\n", "");
                     if (serial != "")
                         serial = " #" + serial;
                     string Comment1 = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:Headline/jmx_ib:Text", nsmgr).InnerText;
                     XmlNode Text = xml.SelectSingleNode("jmx:Report/jmx_se:Body/jmx_se:Text", nsmgr);
-                    if (Text == null && title != "津波警報・津波注意報・津波予報")
+                    if (Text == null && !save)
                         Text = xml.SelectSingleNode("jmx:Report/jmx_se:Body/jmx_se:Comments/jmx_se:WarningComment/jmx_se:Text", nsmgr);
 
                     //Text = xml.SelectSingleNode("jmx:Report/jmx_ib:Head/jmx_ib:Text", nsmgr);//津波予報のときはない
@@ -368,8 +368,9 @@ namespace JmalHnd_Tsunami
                         string Magnitude = ((XmlElement)hypo_.SelectSingleNode("jmx_eb:Magnitude", nsmgr)).GetAttribute("description");
                         hypoInfo += $"\n{EqTime}    {Hypo}{SubHypo}\n{Location.Replace("深さ　", "深さ").Replace("　", " ")}  {Magnitude}";
                     }
-
-                    g.DrawString(Zen2Han($"{AnoTime}発表 {title}{serial}  {EventID} {Office}\n\n{hypoInfo}\n<詳細情報>\n{Comment1}\n\n{Comment2.Replace("。　", "。\n").Replace("　", "")}\n{ValidDateTime}"), new Font(font, 18), Brushes.White, drawRect);
+                    var tex = Zen2Han($"{AnoTime}発表 {title}{serial}  {EventID} {Office}\n\n{hypoInfo}\n<詳細情報>\n{Comment1}\n\n{Comment2.Replace("。　", "。\n").Replace("　", "")}\n{ValidDateTime}");
+                    Console.WriteLine(tex);
+                    g.DrawString(tex, new Font(font, 18), Brushes.White, drawRect);
                     g.DrawString("気象データ・地図データ:気象庁", new Font(font, 20), Brushes.White, 680, 1040);
                     LastIsValid = true;
                     if (ForeEnd == null)//基本津波注意報以上
