@@ -29,6 +29,7 @@ namespace JmalHnd_Tsunami
         internal static string LastAreas = "";
         internal static DateTime LastForeValid = DateTime.MaxValue;
         internal static bool LastIsValid = false;
+        internal static bool OnlyVTSE41 = false;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -56,7 +57,7 @@ namespace JmalHnd_Tsunami
             //Draw("C:\\Ichihai1415\\source\\vs\\JmalHnd-Tsunami\\JmalHnd-Tsunami\\bin\\x64\\Debug\\output\\20240101161519_0_VTSE41_010000.xml");
             //Draw("C:\\Ichihai1415\\source\\vs\\JmalHnd-Tsunami\\JmalHnd-Tsunami\\bin\\x64\\Debug\\output\\20240102010011_0_VTSE41_010000.xml");
 
-        }
+        }//todo:津波情報aには失効時刻ないからいい感じに統合できるよう
 
         /// <summary>
         /// デバッグで古い情報取得用(feedのみ)
@@ -93,7 +94,7 @@ namespace JmalHnd_Tsunami
                     Console.WriteLine("feedから津波情報を検索中…");
                     foreach (XmlNode node in xml.SelectNodes("atom:feed/atom:entry", nsmgr))
                     {
-                        if (node.SelectSingleNode("atom:title", nsmgr).InnerText == "津波警報・注意報・予報a" || node.SelectSingleNode("atom:title", nsmgr).InnerText == "津波情報a")
+                        if (node.SelectSingleNode("atom:title", nsmgr).InnerText == "津波警報・注意報・予報a" || (!OnlyVTSE41 && node.SelectSingleNode("atom:title", nsmgr).InnerText == "津波情報a"))
                         {
                             if (skip != 0)
                             {
@@ -480,6 +481,12 @@ namespace JmalHnd_Tsunami
         private void TSMGetnow_Click(object sender, EventArgs e)
         {
             Draw();
+        }
+
+        private void TSMGetnowOnlyWarn_Click(object sender, EventArgs e)
+        {
+            OnlyVTSE41 = !OnlyVTSE41;
+            TSMOnlyVTSE41.Checked = OnlyVTSE41;
         }
     }
     public class TsunamiInfo
