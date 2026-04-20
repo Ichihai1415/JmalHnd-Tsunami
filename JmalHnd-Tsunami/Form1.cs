@@ -96,6 +96,8 @@ namespace JmalHnd_Tsunami
                     {
                         if (node.SelectSingleNode("atom:title", nsmgr).InnerText == "津波警報・注意報・予報a" || (!OnlyVTSE41 && node.SelectSingleNode("atom:title", nsmgr).InnerText == "津波情報a"))
                         {
+                            if (File.Exists("_ignore-VTSE51") && node.SelectSingleNode("atom:content", nsmgr).InnerText == "【各地の満潮時刻・津波到達予想時刻に関する情報】各地の満潮時刻と津波到達予想時刻をお知らせします。")
+                                continue;
                             if (skip != 0)
                             {
                                 skip--;
